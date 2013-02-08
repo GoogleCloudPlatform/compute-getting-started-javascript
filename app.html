@@ -22,14 +22,13 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <link rel="stylesheet" src="style.css" />
     <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="https://apis.google.com/js/client.js"></script>
     <script type="text/javascript">
       /**
        * Your project ID, found in the API Console -> Overview -> Project ID
        */
-      var projectId = 'YOUR_GOOGLE_COMPUTE_ENGINE_PROJECT';
+      var projectId = '<your-project-id>';
 
       /**
        * Your client ID, found in the API Console -> API Access -> Client ID for
@@ -37,7 +36,7 @@
        * Please see the README for creation details, if you do not currently have
        * a client ID.
        */
-      var clientId = 'YOUR_CLIENT_ID';
+      var clientId = '<your-client-id>';
 
       /**
        * Enter the API key from the Google Developer Console, by following these
@@ -47,7 +46,7 @@
        * 3) Within the section 'Simple API Access', copy the 'API Key', from
       *  field 'Key for browser apps (with referers)'
        */
-      var apiKey = 'YOUR_API_KEY';
+      var apiKey = '<your-api-key>';
 
       /**
        * To enter one or more authentication scopes, refer to the documentation
@@ -58,19 +57,20 @@
       /**
        * Constants for request parameters.
        */
-      var API_VERSION = 'v1beta13';
+      var API_VERSION = '<api-version>';
       var DEFAULT_PROJECT = projectId;
+      var DEFAULT_ZONE = '<zone>';
       var GOOGLE_PROJECT = 'google';
       var DEFAULT_NAME = 'new-node';
       var DEFAULT_NAME_WITH_METADATA = 'new-node-with-metadata';
       var BASE_URL = 'https://www.googleapis.com/compute/' + API_VERSION +
         '/projects/'
       var DEFAULT_IMAGE = BASE_URL + GOOGLE_PROJECT +
-        '/images/ubuntu-12-04-v20120912';
+        '/global/images/gcel-12-04-v20130104';
       var DEFAULT_MACHINE_TYPE = BASE_URL + DEFAULT_PROJECT +
-        '/machineTypes/n1-standard-1';
-      var DEFAULT_NETWORK = BASE_URL + DEFAULT_PROJECT + '/networks/default';
-      var DEFAULT_ZONE = BASE_URL + DEFAULT_PROJECT + '/zones/us-east1-a';
+        '/global/machineTypes/n1-standard-1';
+      var DEFAULT_NETWORK = BASE_URL + DEFAULT_PROJECT +
+        '/global/networks/default';
       var DEFAULT_FILTER_OPERATION = 'operationType eq insert';
 
       /**
@@ -94,10 +94,15 @@
           'for a list of all networks currently in use in your cluster, and ' +
           'returns the result as a list of Google Compute Engine networks.',
 
-        'listOperations': 'This API call queries the Google Compute Engine API ' +
-          'for a list of all the operations associated with your cluster ' +
-          '(inserts, deletes, lists, etc.) and returns the result as a list ' +
-          'of Google Compute Engine operations.',
+        'listGlobalOperations': 'This API call queries the Google Compute ' +
+          'Engine API for a list of all the global operations associated ' +
+          'with your cluster (inserts, deletes, lists, etc.) and returns the ' +
+          'result as a list of Google Compute Engine operations.',
+
+        'listZoneOperations': 'This API call queries the Google Compute ' +
+          'Engine API for a list of all the zonal operations associated ' +
+          'with your cluster (inserts, deletes, lists, etc.) and returns the ' +
+          'result as a list of Google Compute Engine operations.',
 
         'listOperationsWithFilter': [
           'This API call queries the Google Compute Engine API for a list of ' +
@@ -119,7 +124,6 @@
           "'name': " + DEFAULT_NAME,
           "'image': " + DEFAULT_IMAGE,
           "'machineType': " + DEFAULT_MACHINE_TYPE,
-          "'zone': " + DEFAULT_ZONE,
           "'networkInterfaces': [{ 'network': " + DEFAULT_NETWORK + ' }]'
         ],
 
@@ -131,7 +135,6 @@
           "'name': " + DEFAULT_NAME_WITH_METADATA,
           "'image': " + DEFAULT_IMAGE,
           "'machineType': " + DEFAULT_MACHINE_TYPE,
-          "'zone': " + DEFAULT_ZONE,
           "'networkInterfaces': [{ 'network': " + DEFAULT_NETWORK + ' }]',
           "'metadata': {'items': [{'value': 'apt-get install apache2', 'key':" +
             "'startup-script'}], 'kind': 'compute#metadata'}"],
@@ -315,7 +318,8 @@
        */
       function listInstances() {
         var request = gapi.client.compute.instances.list({
-          'project': DEFAULT_PROJECT
+          'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE
         });
         executeRequest(request, 'listInstances');
       }
@@ -329,7 +333,6 @@
           'image': DEFAULT_IMAGE,
           'name': DEFAULT_NAME,
           'machineType': DEFAULT_MACHINE_TYPE,
-          'zone': DEFAULT_ZONE,
           'networkInterfaces': [{
             'network': DEFAULT_NETWORK
           }]
@@ -337,6 +340,7 @@
 
         var request = gapi.client.compute.instances.insert({
           'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE,
           'resource': resource
         });
         executeRequest(request, 'insertInstance');
@@ -351,7 +355,6 @@
           'image': DEFAULT_IMAGE,
           'name': DEFAULT_NAME_WITH_METADATA,
           'machineType': DEFAULT_MACHINE_TYPE,
-          'zone': DEFAULT_ZONE,
           'networkInterfaces': [{
             'network': DEFAULT_NETWORK
           }],
@@ -366,6 +369,7 @@
 
         var request = gapi.client.compute.instances.insert({
           'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE,
           'resource': resource
         });
         executeRequest(request, 'insertInstanceWithMetadata');
@@ -378,6 +382,7 @@
       function getInstance() {
         var request = gapi.client.compute.instances.get({
           'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE,
           'instance': DEFAULT_NAME
         });
         executeRequest(request, 'getInstance');
@@ -390,6 +395,7 @@
       function getInstanceWithMetadata() {
         var request = gapi.client.compute.instances.get({
           'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE,
           'instance': DEFAULT_NAME_WITH_METADATA
         });
         executeRequest(request, 'getInstanceWithMetadata');
@@ -402,6 +408,7 @@
       function deleteInstance() {
         var request = gapi.client.compute.instances.delete({
           'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE,
           'instance': DEFAULT_NAME
         });
         executeRequest(request, 'deleteInstance');
@@ -414,6 +421,7 @@
       function deleteInstanceWithMetadata() {
         var request = gapi.client.compute.instances.delete({
           'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE,
           'instance': DEFAULT_NAME_WITH_METADATA
         });
         executeRequest(request, 'deleteInstance');
@@ -442,14 +450,27 @@
       }
 
       /**
+       * Google Compute Engine API request to retreive the list of global
+       * operations (inserts, deletes, etc.) for your Google Compute Engine
+       * project.
+       */
+      function listGlobalOperations() {
+        var request = gapi.client.compute.globalOperations.list({
+          'project': DEFAULT_PROJECT
+        });
+        executeRequest(request, 'listGlobalOperations');
+      }
+
+      /**
        * Google Compute Engine API request to retreive the list of operations
        * (inserts, deletes, etc.) for your Google Compute Engine project.
        */
-      function listOperations() {
-        var request = gapi.client.compute.operations.list({
-          'project': DEFAULT_PROJECT
+      function listZoneOperations() {
+        var request = gapi.client.compute.zoneOperations.list({
+          'project': DEFAULT_PROJECT,
+          'zone': DEFAULT_ZONE
         });
-        executeRequest(request, 'listOperations');
+        executeRequest(request, 'listZoneOperations');
       }
 
       /**
@@ -458,7 +479,7 @@
        * Google Compute Engine project.
        */
       function listOperationsWithFilter() {
-        var request = gapi.client.compute.operations.list({
+        var request = gapi.client.compute.globalOperations.list({
           'project': DEFAULT_PROJECT,
           'filter': DEFAULT_FILTER_OPERATION
         });
@@ -572,8 +593,11 @@
       <option value="listNetworks">
         List Networks
       </option>
-      <option value="listOperations">
-        List Operations
+      <option value="listGlobalOperations">
+        List Global Operations
+      </option>
+      <option value="listZoneOperations">
+        List Zone Operations
       </option>
       <option value="listOperationsWithFilter">
         List Operations With A Filter

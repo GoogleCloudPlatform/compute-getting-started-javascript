@@ -2,7 +2,7 @@
 
 ## Description
 This is a simple web-based example of calling the Google Compute Engine API
-in JavaScript.
+in JavaScript. It uses the [Google API JavaScript Client][1].
 
 ## Setup Authentication
 NOTE: This README assumes that you have enabled access to the Google Compute
@@ -28,3 +28,6 @@ application
 ## Running the Sample Application
 3) Load app.html on your web server, and visit the appropriate website in
 your web browser.
+
+
+[1] http://code.google.com/p/google-api-javascript-client/
